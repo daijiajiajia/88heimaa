@@ -37,7 +37,9 @@
   <!-- 右边布局 -->
   <el-container>
     <!-- 又分为上下布局 -->
-    <el-header></el-header>
+    <el-header>
+      <layout-header></layout-header>
+    </el-header>
     <el-main>
       <!-- 二级路由容器 -->
       <router-view></router-view>
@@ -47,11 +49,12 @@
 </template>
 
 <script>
-
+// 导入组件
+import layoutHeader from '../../components/layout-header'
 export default {
   name: 'home',
   components: {
-
+    'layout-header': layoutHeader
   }
 }
 </script>
