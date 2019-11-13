@@ -7,11 +7,11 @@
        <img src="../../assets/img/logo_index.png" alt="">
      </div>
      <!-- 表单 -->
-     <el-form style="margin-top:30px" :model='loginForm'>
-       <!-- 一个表单与就是一个form-item -->
+     <!-- model 属性 要绑定的表单数据对象 rules标示绑定校验规则对象 ref 属性(属性名无所谓主要是获取...) -->
+     <el-form ref='formObj' style="margin-top:30px" :model='loginForm' :rules='loginRules'>
+       <!-- 一个表单与就是一个form-item  prop接收校验数据的字段名 通过获取model值-->
        <el-form-item prop="mobile">
          <!-- 放置表单组件  手机号 -->
-         <!--  -->
          <el-input v-model="loginForm.mobile" placeholder='请输入您的手机号'></el-input>
        </el-form-item>
       <el-form-item prop="code">
@@ -41,6 +41,35 @@ export default {
         mobile: '', // 手机号
         code: '', // 验证码
         checked: false // 是否勾选
+      },
+      // 校验规则对象  prop值
+      loginRules: {
+      //  key（要校验的字段名）：value（数组=>多条或者一条或者没有规则 =》在这种情况下校验）
+        //  require:不填无法通过校验 写true就表示该字段必填
+        //  message 当不满足设置规则时的提示信息 对象1. 输入为空的时 对象2.输入内容不正确
+        //  pattern 正则表达式
+        mobile: [{ required: true, message: '请输入您的手机号' }, {
+          pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号'
+        }],
+        code: [{ required: true, message: '请输入验证码' },
+          {
+            pattern: /^\d{6}$/, message: '请输入正确验证码'
+          }
+        ],
+        // required 只能校验null undefined 和空字符串 不能校验布尔值所以采取另一种方式校验
+        checked: [{ validator: function (rule, value, callback) {
+          // rule 代表当前规则
+          // value代表当前的值 =》表单字段checked的值
+          // callback 代表回电函数
+          if (value) {
+            // 如果是true 就是选中了 通过校验
+            callback() // 直接执行callback表示通过
+          } else {
+            // 如果没有选中 不通过校验 返回一个错误信息
+            // 为什么是new Error 因为它期望传递一个error实例数组以指示验证失败(网上查的)
+            callback(new Error('您需要勾选协议'))
+          }
+        } }]
       }
     }
   }
