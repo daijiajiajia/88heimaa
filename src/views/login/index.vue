@@ -25,7 +25,7 @@
        </el-form-item>
        <!-- 提交按钮 -->
        <el-form-item>
-         <el-button style='width:100%' type='primary'>登录</el-button>
+         <el-button style='width:100%' type='primary' @click='login'>登录</el-button>
        </el-form-item>
      </el-form>
    </el-card>
@@ -57,6 +57,7 @@ export default {
           }
         ],
         // required 只能校验null undefined 和空字符串 不能校验布尔值所以采取另一种方式校验
+        // validator 自定义校验函数
         checked: [{ validator: function (rule, value, callback) {
           // rule 代表当前规则
           // value代表当前的值 =》表单字段checked的值
@@ -71,6 +72,39 @@ export default {
           }
         } }]
       }
+    }
+  },
+  // 手动验证所有数据
+  methods: {
+    login () {
+      // this.$refs.formObj  获取el-form 的对象实例
+      // console.log(this.$refs.formObj)  得到的是 全局实例
+      this.$refs.formObj.validate((isok) => {
+        if (isok) {
+          // 如果是true就继续 调用接口 调用借口 首先确定有没有引入
+          // console.log('校验成功！')
+          this.$axios({
+            url: '/authorizations',
+            data: this.loginForm,
+            method: 'post'
+            // 正确信息是.then（）
+          }).then(result => {
+            // 返回值 给一个身份牌 存储到本地
+            // console.log(result) 可以获取到token result.data.data.token
+          //  存到本地存储
+            window.localStorage.setItem('user-token', result.data.data.token)
+            // 跳转到主页
+            this.$router.push('/home')
+          }).catch(() => {
+            // 错误信息就用catch接收
+          //  提示信息 this.$message 是ele-ui已经安装在全局了所以可以直接使用 详情参照ele-ui
+            this.$message({
+              type: 'warning',
+              message: '手机号或者验证码错误'
+            })
+          })
+        }
+      })
     }
   }
 }
