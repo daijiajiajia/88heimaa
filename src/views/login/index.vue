@@ -95,7 +95,7 @@ export default {
           //  存到本地存储
             window.localStorage.setItem('user-token', result.data.data.token)
             // 跳转到主页
-            this.$router.push('/layout')
+            this.$router.push('/')
           }).catch(() => {
             // 错误信息就用catch接收
           //  提示信息 this.$message 是ele-ui已经安装在全局了所以可以直接使用 详情参照ele-ui

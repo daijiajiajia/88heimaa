@@ -4,6 +4,7 @@ import router from './router'
 import elementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css' // 引入样式
 import './styles/index.less'
+import 'nprogress/nprogress.css'
 import axios from 'axios' // 引入axios在运行时依赖
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 设置 axios的常态地址
 Vue.prototype.$axios = axios // 将axios共享给所有的实例使用 以后使用都可以直接使用 this.$axios
