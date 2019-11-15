@@ -77,8 +77,9 @@ export default {
   // 手动验证所有数据
   methods: {
     login () {
-      // this.$refs.formObj  获取el-form 的对象实例
-      // console.log(this.$refs.formObj)  得到的是 全局实例
+      // this.$refs.formObj  获取el-form 的对象实例（组件）
+      // ref 可以获取两个 ：1.获取dom对象 2.获取组件(也就是this，子组件实例本身) 获取this之后就可以调用他的东西比如data，methods
+      // console.log(this.$refs.formObj)  得到的是 全局实例-》严格来说组件就是一个特殊的vue实例； 在这里ref获取的是的组件 validate是组件的一个方法
       this.$refs.formObj.validate((isok) => {
         if (isok) {
           // 如果是true就继续 调用接口 调用借口 首先确定有没有引入
@@ -94,7 +95,7 @@ export default {
           //  存到本地存储
             window.localStorage.setItem('user-token', result.data.data.token)
             // 跳转到主页
-            this.$router.push('/home')
+            this.$router.push('/layout')
           }).catch(() => {
             // 错误信息就用catch接收
           //  提示信息 this.$message 是ele-ui已经安装在全局了所以可以直接使用 详情参照ele-ui
