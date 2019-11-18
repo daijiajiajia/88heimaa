@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Layout from '@/views/layout'
 import login from '../views/login'
 import Home from '@/views/home'
-import Article from '@/views/article'
+import Article from '@/views/articles'
 import Publish from '@/views/publish'
 
 // 加载nprogress
