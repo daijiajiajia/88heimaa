@@ -21,16 +21,17 @@
         </el-form-item>
         <el-form-item label="频道列表">
           <!-- 下拉列表会把选中option的value值 同步到数据中 -->
-          <el-select placeholder="请选择频道" v-model='filterForm.channel_id'>
-            <!-- 手动增加一个option 加上所有 -->
+          <!-- <el-select placeholder="请选择频道" v-model='filterForm.channel_id'>
+            手动增加一个option 加上所有
             <el-option label='所有频道' :value='null'></el-option>
             <el-option
              :label="channel.name"
              :value='channel.id'
              v-for="channel in channels"
              :key="channel.id"
-             ></el-option>
-          </el-select>
+             ></el-option> -->
+          <!-- </el-select> -->
+          <channel-select v-model='filterForm.channel_id'></channel-select>
         </el-form-item>
         <el-form-item label="时间选择" required>
             <el-date-picker
@@ -125,8 +126,12 @@
 </template>
 
 <script>
+import ChannelSelect from '@/components/channel-select'
 export default {
   name: 'articlesload',
+  components: {
+    ChannelSelect
+  },
   data () {
     return {
       //  过滤数据的表单
@@ -164,7 +169,7 @@ export default {
 
       ],
       totalcount: 0, // 总记录数
-      channels: [], // 频道列表
+      // channels: [], // 频道列表
       page: 1 // 当前页码
     }
   },
@@ -222,18 +227,18 @@ export default {
       // 请求指定页码的文章列表
       this.loadArticles(page)
     },
-    loadChannels () {
-      // 有些接口需要token有些接口不需要token 根据情况
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      }).then(res => {
-        // console.log(res)
-        this.channels = res.data.data.channels
-      }).catch(err => {
-        console.log(err, '获取失败')
-      })
-    },
+    // loadChannels () {
+    //   // 有些接口需要token有些接口不需要token 根据情况
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/channels'
+    //   }).then(res => {
+    //     // console.log(res)
+    //     this.channels = res.data.data.channels
+    //   }).catch(err => {
+    //     console.log(err, '获取失败')
+    //   })
+    // },
     ondelete (articleId) {
       this.$axios({
         method: 'DELETE',
@@ -256,7 +261,7 @@ export default {
     // 获取文章列表 es6语法  不传默认是1 传递了就是传递了的
     this.loadArticles(1)
     // 获取频道列表
-    this.loadChannels()
+    // this.loadChannels()
   }
 }
 </script>

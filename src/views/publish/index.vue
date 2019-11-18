@@ -20,14 +20,17 @@
         </el-form-item>
         <el-form-item label="频道">
           <!-- 下拉列表会把选中option的value值 同步到数据中 -->
-          <el-select placeholder="请选择频道" v-model='article.channel_id'>
+          <!-- <el-select placeholder="请选择频道" v-model='article.channel_id'>
             <el-option
              :label="channel.name"
              :value='channel.id'
              v-for="channel in channels"
              :key="channel.id"
              ></el-option>
-          </el-select>
+          </el-select> -->
+
+               <!-- 我们自己封装的频道列表 -->
+          <channel-select v-model='article.channel_id'></channel-select>
         </el-form-item>
         <!-- <el-form-item label="特殊资源">
                  <el-radio-group v-model="form.resource">
@@ -55,10 +58,12 @@ import 'quill/dist/quill.bubble.css'
 // 加载富文本的核心组件
 import { quillEditor } from 'vue-quill-editor'
 
+import ChannelSelect from '@/components/channel-select'
 export default {
   name: 'Articlapublish',
   components: {
-    quillEditor
+    quillEditor,
+    ChannelSelect
   },
   data () {
     return {
@@ -71,7 +76,7 @@ export default {
         },
         channel_id: '' // id
       },
-      channels: [],
+      // channels: [],
       editorOption: {} // 富文本编辑器的配置选项
     }
   },
@@ -92,22 +97,22 @@ export default {
       }).catch(err => {
         console.log(err, '保存失败')
       })
-    },
-    loadChannels () {
-      // 有些接口需要token有些接口不需要token 根据情况
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      }).then(res => {
-        // console.log(res)
-        this.channels = res.data.data.channels
-      }).catch(err => {
-        console.log(err, '获取失败')
-      })
     }
+    // loadChannels () {
+    //   // 有些接口需要token有些接口不需要token 根据情况
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/channels'
+    //   }).then(res => {
+    //     // console.log(res)
+    //     this.channels = res.data.data.channels
+    //   }).catch(err => {
+    //     console.log(err, '获取失败')
+    //   })
+    // }
   },
   created () {
-    this.loadChannels()
+    // this.loadChannels()
   }
 
 }
