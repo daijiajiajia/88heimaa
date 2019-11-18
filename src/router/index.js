@@ -5,7 +5,7 @@ import login from '../views/login'
 import Home from '@/views/home'
 import Article from '@/views/articles'
 import Publish from '@/views/publish'
-
+import Comment from '@/views/comment'
 // 加载nprogress
 import Nprogress from 'nprogress'
 
@@ -30,6 +30,18 @@ const routes = [
       }, { // 发布文章
         path: '/publish',
         component: Publish
+      },
+      // 如果从a路由跳到b路由
+      // 两个，如果两个路由使用同一个组件，那么这个组件不会从新渲染
+      // 正常的路由跳转，会销毁离开的组件，渲染新匹配到的组件
+      // 组件销毁  也就意味着  数据都被清除  当发现两个路由共用一个组价 他是复用了-缓存了
+      { // 发布文章
+        path: '/publish/:articleId',
+        component: Publish
+      },
+      { // 评论列表
+        path: '/comment',
+        component: Comment
       }
     ]
   }, {
