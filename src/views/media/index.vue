@@ -3,7 +3,26 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>素材管理</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+       <!--
+         action  上传文件的地址
+         on-preview 上传预览时间
+         on-remove 删除事件
+         这个上传组件能帮我们自动发送请求  只需要把相关的配置出来
+         上传组件自己内部自己发请求   不是axios  不需要基础路径
+          手动配置请求头
+        -->
+        <el-upload
+        show-file-list='false'
+        :on-success='onUploadSuccess'
+          name='image'
+          :headers='uploadheaders'
+          style="float: right; padding: 3px 0"
+          class="upload-demo"
+          action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+           >
+          <el-button size="small" type="primary">点击上传</el-button>
+        </el-upload>
+
       </div>
 
       <div>
@@ -57,12 +76,17 @@
 </template>
 
 <script>
+const token = window.localStorage.getItem('user-token')
+
 export default {
   name: 'MeidaImage',
   data () {
     return {
       images: [],
-      type: '全部'
+      type: '全部',
+      uploadheaders: {
+        Authorization: `Bearer ${token}`
+      }
     }
   },
   created () {
@@ -135,6 +159,10 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // upload组件上传成功触发的事件
+    onUploadSuccess () {
+      this.loadImages(this.type !== '全部')
     }
   }
 }
