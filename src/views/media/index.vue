@@ -39,7 +39,9 @@
               <i :class="{
                 'el-icon-star-on': item.is_collected,
                 'el-icon-star-off': !item.is_collected,
-                }"></i>
+                }"
+                @click='onCollect(item)'
+                ></i>
              <!--   class 本来就是绑定数据字符串
                 <i :class="iteme.is_collected?el-icon-star-on:el-icon-star-on"></i> -->
              <i class="el-icon-delete-solid"></i>
@@ -84,6 +86,25 @@ export default {
     // 所以我们可以声明一个形参来接收使用
     onFind (value) {
       this.loadImages(value !== '全部')
+    },
+    // 收藏和取消
+    onCollect (item) {
+      this.$axios({
+        method: 'PUT',
+        url: `/user/images/${item.id}`,
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(res => {
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+
+        item.is_collected = !item.is_collected
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
