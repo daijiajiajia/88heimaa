@@ -44,7 +44,9 @@
                 ></i>
              <!--   class 本来就是绑定数据字符串
                 <i :class="iteme.is_collected?el-icon-star-on:el-icon-star-on"></i> -->
-             <i class="el-icon-delete-solid"></i>
+             <i class="el-icon-delete-solid"
+              @click="onDelete(item)"
+             ></i>
             </div>
           </el-card>
        </el-col>
@@ -104,6 +106,34 @@ export default {
         item.is_collected = !item.is_collected
       }).catch(err => {
         console.log(err)
+      })
+    },
+    // 删除
+    onDelete (item) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 确定执行
+        this.$axios({
+          method: 'DELETE',
+          url: `/user/images/${item.id}`
+        }).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          this.loadImages(this.type !== '全部')
+        }).catch(err => {
+          console.log(err)
+        })
+      }).catch(() => {
+        // 取消执行
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   }
