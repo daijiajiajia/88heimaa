@@ -7,6 +7,7 @@ import './styles/index.less'
 import 'nprogress/nprogress.css'
 import JSONbig from 'json-bigint'
 import axios from 'axios' // 引入axios在运行时依赖
+import moment from 'moment'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 设置 axios的常态地址
 // axios默认会把后端返回的数据使用json。parse转为对象给我们使用
 // 同时他也提供了让我们自定义转换的功能
@@ -59,7 +60,22 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error)
 })
 Vue.prototype.$axios = axios // 将axios共享给所有的实例使用 以后使用都可以直接使用 this.$axios
-Vue.use(elementUI) // 注册整个的所有的element组件 vue.use调用elementui里面的一个方法 install=> 调用时 传入了vue对象
+Vue.use(elementUI, {
+  // 项目中所有拥有size属性的组件的默认尺寸均为small
+  size: 'small'
+}) // 注册整个的所有的element组件 vue.use调用elementui里面的一个方法 install=> 调用时 传入了vue对象
+
+// 全局过滤器：任何组件模板都可以直接访问
+// 参数1：过滤器名称
+// 参数2：函数
+// 调用方式：在模板中{{ 数据 | 过滤器 }}
+//  | 管道符前面的数据就会作为参数传递给过滤器函数
+//  format 是一个默认参数 没传就只是这个 穿了就是传的
+// vue在版本1时有很多内置的过滤器
+Vue.filter('dateFormat', (value, format = 'YYYY-MM-DD') => {
+  return moment(value).format(format)
+})
+
 Vue.config.productionTip = false
 new Vue({
   router,

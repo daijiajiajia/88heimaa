@@ -3,9 +3,11 @@ import VueRouter from 'vue-router'
 import Layout from '@/views/layout'
 import login from '../views/login'
 import Home from '@/views/home'
-import Article from '@/views/articles'
-import Publish from '@/views/publish'
-import Comment from '@/views/comment'
+import Article from '@/views/articles' // 文章列表
+import Publish from '@/views/publish' // 发布文章
+import Comment from '@/views/comment' // 评论列表
+import CommentList from '@/views/comment-list' // 评论详情
+import Media from '@/views/media' // 素材管理
 // 加载nprogress
 import Nprogress from 'nprogress'
 
@@ -42,6 +44,16 @@ const routes = [
       { // 评论列表
         path: '/comment',
         component: Comment
+      },
+      { // 点击修改
+        path: '/comment/:articleId',
+        component: CommentList,
+        // 将路由参数映射给组件的props数据,这样获取参数更方便
+        props: true
+      },
+      { // 评论列表
+        path: '/media',
+        component: Media
       }
     ]
   }, {
