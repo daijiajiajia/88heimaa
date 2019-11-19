@@ -12,8 +12,8 @@
           手动配置请求头
         -->
         <el-upload
-        show-file-list='false'
-        :on-success='onUploadSuccess'
+          show-file-list='false'
+          :on-success='onUploadSuccess'
           name='image'
           :headers='uploadheaders'
           style="float: right; padding: 3px 0"
@@ -23,6 +23,13 @@
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
 
+         <el-button
+         type='success'
+          style='float:right;margin-right:10px'
+          @click='onupload'
+          >自己上传图片</el-button>
+
+          <input type="file" hidden ref='file' @click='onFilechnge'>
       </div>
 
       <div>
@@ -163,6 +170,28 @@ export default {
     // upload组件上传成功触发的事件
     onUploadSuccess () {
       this.loadImages(this.type !== '全部')
+    },
+    // 手动上传
+    onupload () {
+      this.$refs.files.click()
+    },
+    // input的change事件
+    onFilechnge () {
+      const fileobj = this.$refs.sile.files[0]
+      const formdata = new FormData()
+
+      formdata.append('image', fileobj)
+      // 请求上传
+      this.$axios({
+        method: 'GET',
+        url: 'user/images',
+        data: formdata
+      }).then(res => {
+        console.log(res)
+        this.loadImages(this.type !== '全部')
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
