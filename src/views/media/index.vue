@@ -12,7 +12,7 @@
           手动配置请求头
         -->
         <el-upload
-          show-file-list='false'
+          :show-file-list="false"
           :on-success='onUploadSuccess'
           name='image'
           :headers='uploadheaders'
@@ -26,10 +26,10 @@
          <el-button
          type='success'
           style='float:right;margin-right:10px'
-          @click='onupload'
+          @click='onUpload'
           >自己上传图片</el-button>
 
-          <input type="file" hidden ref='file' @click='onFilechnge'>
+          <input type="file" hidden ref='file' @change='onFilechange'>
       </div>
 
       <div>
@@ -172,20 +172,21 @@ export default {
       this.loadImages(this.type !== '全部')
     },
     // 手动上传
-    onupload () {
-      this.$refs.files.click()
+    onUpload () {
+      // 触发dom事件
+      this.$refs.file.click()
     },
     // input的change事件
-    onFilechnge () {
-      const fileobj = this.$refs.sile.files[0]
-      const formdata = new FormData()
+    onFilechange () {
+      const fileobj = this.$refs.file.files[0]
+      const formData = new FormData()
 
-      formdata.append('image', fileobj)
+      formData.append('image', fileobj)
       // 请求上传
       this.$axios({
-        method: 'GET',
-        url: 'user/images',
-        data: formdata
+        method: 'POST',
+        url: '/user/images',
+        data: formData
       }).then(res => {
         console.log(res)
         this.loadImages(this.type !== '全部')

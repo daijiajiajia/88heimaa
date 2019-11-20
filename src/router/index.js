@@ -8,6 +8,7 @@ import Publish from '@/views/publish' // 发布文章
 import Comment from '@/views/comment' // 评论列表
 import CommentList from '@/views/comment-list' // 评论详情
 import Media from '@/views/media' // 素材管理
+import Account from '@/views/account' // 账户信息
 // 加载nprogress
 import Nprogress from 'nprogress'
 
@@ -54,6 +55,10 @@ const routes = [
       { // 评论列表
         path: '/media',
         component: Media
+      },
+      { // 账户信息
+        path: '/account',
+        component: Account
       }
     ]
   }, {

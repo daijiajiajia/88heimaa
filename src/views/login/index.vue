@@ -77,6 +77,7 @@ export default {
   // 手动验证所有数据
   methods: {
     login () {
+      // console.log(11111)
       // this.$refs.formObj  获取el-form 的对象实例（组件）
       // ref 可以获取两个 ：1.获取dom对象 2.获取组件(也就是this，子组件实例本身) 获取this之后就可以调用他的东西比如data，methods
       // console.log(this.$refs.formObj)  得到的是 全局实例-》严格来说组件就是一个特殊的vue实例； 在这里ref获取的是的组件 validate是组件的一个方法
@@ -91,8 +92,8 @@ export default {
             // 正确信息是.then（）
           }).then(result => {
             // 返回值 给一个身份牌 存储到本地
-            // console.log(result) 可以获取到token result.data.data.token
-          //  存到本地存储
+            console.log(result) // 可以获取到token result.data.data.token
+            //  存到本地存储
             window.localStorage.setItem('user-token', result.data.data.token)
             // 跳转到主页
             this.$router.push('/')
