@@ -35,12 +35,21 @@
                <!-- 我们自己封装的频道列表 -->
           <channel-select v-model='article.channel_id'></channel-select>
         </el-form-item>
-        <!-- <el-form-item label="特殊资源">
-                 <el-radio-group v-model="form.resource">
-                    <el-radio label="线上品牌商赞助"></el-radio>
-                    <el-radio label="线下场地免费"></el-radio>
+        <el-form-item label="封面">
+                 <el-radio-group v-model='article.cover.type'>
+                    <el-radio :label="1">单图</el-radio>
+                    <el-radio :label="3">三图</el-radio>
+                    <el-radio :label="0">无图</el-radio>
+                    <el-radio :label="-1">自动</el-radio>
                  </el-radio-group>
-             </el-form-item> -->
+                 <template v-if="article.cover.type >= 0">
+                    <UploadImage
+                    v-for="item in article.cover.type"
+                    :key='item'
+                    ></UploadImage>
+                 </template>
+
+         </el-form-item>
 
         <el-form-item>
           <el-button type="primary" @click="onSubmit(false)">发表</el-button>
@@ -62,11 +71,14 @@ import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 
 import ChannelSelect from '@/components/channel-select'
+
+import UploadImage from './components/upload-image'
 export default {
   name: 'Articlapublish',
   components: {
     quillEditor,
-    ChannelSelect
+    ChannelSelect,
+    UploadImage
   },
   data () {
     return {
@@ -74,13 +86,14 @@ export default {
         title: '', // 文章标题
         content: '', // 文章内容
         cover: {
-          type: 0, // 无图
+          type: 1, // 无图
           images: [] // 无图就是空数组
         },
         channel_id: '' // id
       },
       // channels: [],
       editorOption: {} // 富文本编辑器的配置选项
+      // imageCount: 1
     }
   },
   methods: {
