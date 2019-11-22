@@ -3,7 +3,7 @@
 <el-container>
   <!-- 先左右布局 -->
   <!-- 侧边栏布局 -->
-  <el-aside class='left' style='width:220px'>
+  <el-aside class='left' style='width:220px;position:fixed'>
      <!-- 侧边栏图标 -->
 
     <!-- <el-col :span="24" style="height:100vh"> -->
@@ -45,7 +45,7 @@
 
  </el-aside>
   <!-- 右边布局 -->
-  <el-container>
+  <el-container class='right'>
     <!-- 又分为上下布局 -->
     <el-header>
       <layout-header></layout-header>
@@ -84,5 +84,8 @@ export default {
   img{
     height: 30px;
   }
+}
+.right{
+  margin-left:220px;
 }
 </style>
