@@ -46,6 +46,7 @@
                     <UploadImage
                     v-for="item in article.cover.type"
                     :key='item'
+                    v-model='article.cover.images[item-1]'
                     ></UploadImage>
                  </template>
 
@@ -94,6 +95,7 @@ export default {
       // channels: [],
       editorOption: {} // 富文本编辑器的配置选项
       // imageCount: 1
+
     }
   },
   methods: {

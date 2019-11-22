@@ -7,8 +7,8 @@
         action="https://jsonplaceholder.typicode.com/posts/"
         :show-file-list="false"
         >
-        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-        <i v-else  @click="centerDialogVisible = true" class="el-icon-plus avatar-uploader-icon"></i>
+        <img v-if="value" :src="value" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
     </el-col>
     <!-- <p>上传</p> -->
@@ -28,7 +28,11 @@
               <el-radio label="collect">收藏</el-radio>
             </el-radio-group>
             <el-row :gutter="20">
-              <el-col :span="6" v-for='item in images' :key='item'>
+              <el-col :class="{
+                'img-item':index === activeIndex
+              }"
+               @click.native="activeIndex = index"
+               :span="6" v-for='(item,index) in images' :key='item'>
                 <img height='100' :src="item.url">
               </el-col>
             </el-row>
@@ -39,7 +43,7 @@
       <!-- <span>需要注意的是内容是默认不居中的</span> -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="onConfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -53,7 +57,15 @@ export default {
       centerDialogVisible: false,
       activeName: 'first', // 激活标签页
       activeType: 'all', // 激活的类型
-      images: []
+      images: [],
+      activeIndex: null, // 激活图片索引
+      previewImage: '' // 预览的图片地址
+
+    }
+  },
+  props: {
+    value: {
+      type: String
     }
   },
   methods: {
@@ -65,7 +77,7 @@ export default {
       // 显示弹框
       this.centerDialogVisible = true
     },
-    loadImages (isCollect = false) {
+    loadImages (isCollect = false) { // 全部和收藏的图片获取
       this.$axios({
         method: 'GET',
         url: '/user/images',
@@ -79,6 +91,18 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    onConfirm () { // 当对话框点击确定的时候
+      const image = this.images[this.activeIndex]
+      if (image) {
+        // 将图片选中的路径赋值给 previewImage
+        // this.previewImage=image.url
+
+        // 将所选图片的路径同步给父组件绑定的数据
+        this.$emit('input', image.url)
+      }
+      // 关闭对话框
+      this.centerDialogVisible = false
     }
   },
   created () {},
@@ -109,5 +133,8 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+.img-item {
+  border:1px solid #000;
 }
 </style>
