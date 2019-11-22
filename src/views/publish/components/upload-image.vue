@@ -4,8 +4,6 @@
       <div
         @click="onUploadshow"
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :show-file-list="false"
         >
         <img v-if="value" :src="value" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -19,7 +17,6 @@
       :visible.sync="centerDialogVisible"
       width="50%"
       center>
-
       <el-tabs v-model="activeName" >
         <el-tab-pane label="素材库" name="first">
           <!-- 标签内容 -->
@@ -32,12 +29,24 @@
                 'img-item':index === activeIndex
               }"
                @click.native="activeIndex = index"
-               :span="6" v-for='(item,index) in images' :key='item'>
+               :span="6" v-for='(item,index) in images' :key='item.id'>
                 <img height='100' :src="item.url">
               </el-col>
             </el-row>
         </el-tab-pane>
-        <el-tab-pane label="上传图片" name="second">上传图片</el-tab-pane>
+
+        <el-tab-pane label="上传图片" name="second">
+            <el-upload
+              action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+              list-type="picture-card"
+              :headers='uploadHeaders'
+              name='image'
+              :on-preview="onPreview"
+             >
+              <i class="el-icon-plus"></i>
+            </el-upload>
+        </el-tab-pane>
+
       </el-tabs>
 
       <!-- <span>需要注意的是内容是默认不居中的</span> -->
@@ -50,17 +59,22 @@
 </template>
 
 <script>
+
 export default {
   name: 'uploadImages',
   data () {
+    const token = window.localStorage.getItem('user-token')
     return {
       centerDialogVisible: false,
       activeName: 'first', // 激活标签页
       activeType: 'all', // 激活的类型
       images: [],
       activeIndex: null, // 激活图片索引
-      previewImage: '' // 预览的图片地址
-
+      // previewImage: '', // 预览的图片地址
+      uploadHeaders: {
+        Authorization: `Bearer ${token}`
+      },
+      previewImage: '' // 存储选中的上传图片的路径
     }
   },
   props: {
@@ -77,7 +91,7 @@ export default {
       // 显示弹框
       this.centerDialogVisible = true
     },
-    loadImages (isCollect = false) { // 全部和收藏的图片获取
+    loadImages () { // 全部和收藏的图片获取
       this.$axios({
         method: 'GET',
         url: '/user/images',
@@ -86,23 +100,37 @@ export default {
           collect: this.activeType === 'collect' // 是否获取收藏图片
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.images = res.data.data.results
       }).catch(err => {
         console.log(err)
       })
     },
     onConfirm () { // 当对话框点击确定的时候
-      const image = this.images[this.activeIndex]
-      if (image) {
+      if (this.activeName === 'first') {
+        const image = this.images[this.activeIndex]
+        if (image) {
         // 将图片选中的路径赋值给 previewImage
         // this.previewImage=image.url
 
-        // 将所选图片的路径同步给父组件绑定的数据
-        this.$emit('input', image.url)
+          // 将所选图片的路径同步给父组件绑定的数据
+          this.$emit('input', image.url)
+        }
+      } else if (this.activeName === 'second') {
+        const previewImage = this.previewImage
+        if (previewImage) {
+          // 将所选图片的路径同步给父组件绑定的数据
+          this.$emit('input', previewImage)
+        }
       }
+
       // 关闭对话框
       this.centerDialogVisible = false
+    },
+    onPreview (file) {
+      // console.log(file)
+      // 上传图片需要点击图片表面的+才会把地址给他
+      this.previewImage = file.response.data.url
     }
   },
   created () {},

@@ -44,10 +44,11 @@
                  </el-radio-group>
                  <template v-if="article.cover.type >= 0">
                     <UploadImage
-                    v-for="item in article.cover.type"
-                    :key='item'
-                    v-model='article.cover.images[item-1]'
-                    ></UploadImage>
+                    v-for="(item,index) in article.cover.type"
+                    :key="item"
+                    v-model='article.cover.images[index]'
+                    >
+                    </UploadImage>
                  </template>
 
          </el-form-item>
@@ -90,7 +91,7 @@ export default {
           type: 1, // 无图
           images: [] // 无图就是空数组
         },
-        channel_id: '' // id
+        channel_id: 4 // id
       },
       // channels: [],
       editorOption: {} // 富文本编辑器的配置选项
@@ -158,10 +159,8 @@ export default {
         method: 'GET',
         url: `/articles/${this.$route.params.articleId}`
       }).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.article = res.data.data // 展示
-      }).catch(err => {
-        console.log(err)
       })
     }
   },
