@@ -8,10 +8,10 @@
       <!-- 右侧 -->
       <el-col :span='3' class='right'>
           <!-- 头像 -->
-          <img src="../assets/img/avatar.jpg" alt="">
+          <img height='50' :src="user.photo" alt="">
           <!-- 下拉菜单 -->
           <el-dropdown trigger='click'>
-              <span>狮子座</span>
+              <span>{{ user.name }}</span>
               <el-dropdown-menu>
                 <el-dropdown-item>账户信息</el-dropdown-item>
                 <el-dropdown-item>git地址</el-dropdown-item>
@@ -27,6 +27,17 @@
 
 <script>
 export default {
+  data () {
+    return {
+      user: {
+        name: '',
+        photo: ''
+      }
+    }
+  },
+  created () {
+    this.loadUser()
+  },
   methods: {
     onlogout () {
       this.$confirm('确认要退出吗?', '退出提示', {
@@ -49,6 +60,16 @@ export default {
           type: 'info',
           message: '已取消退出'
         })
+      })
+    },
+    loadUser () {
+      this.$axios({
+        method: 'GET',
+        url: '/user/profile'
+      }).then(res => {
+        this.user = res.data.data
+      }).catch(err => {
+        console.log(err)
       })
     }
   }
