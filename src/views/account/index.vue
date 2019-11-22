@@ -22,14 +22,20 @@
             </el-form>
         </el-col>
         <el-col :offset="1" :span="5">
+                <!--
+                  要么自己上传 要么就用组件的
+                  但是发现两个请求 一个是post  我们的是patch  不支持自定义请求方法
 
+                  覆盖默认的上传行为，可以自定义上传的实现   http-request
+                 -->
             <el-upload
+              :http-request='onUpload'
               class="avatar-uploader"
               action="https://jsonplaceholder.typicode.com/posts/"
               :show-file-list="false"
             >
-              <img width="100" :src="user.photo" class="avatar" />
-              <i class="el-icon-plus avatar-uploader-icon"></i>
+              <img v-if='user.photo' :src='user.photo' width="100" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               <p>点击上传用户头像</p>
             </el-upload>
 
@@ -55,7 +61,7 @@ export default {
     this.loadUserProfile()
   },
   methods: {
-    onSubmit () {
+    onSubmit () { // 点击提交账户信息
       // console.log('submit!')
       // const { name,eamil,intro}=this.user   解构
       this.$axios({
@@ -71,7 +77,7 @@ export default {
         console.log(err)
       })
     },
-    loadUserProfile () {
+    loadUserProfile () { // 加载用户信息
       this.$axios({
         method: 'GET',
         url: '/user/profile'
@@ -81,10 +87,47 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    onUpload (config) { // 覆盖上传行为
+    //  经过测试 我们可以接受到一个上传相关的参数
+      const fd = new FormData()
+      fd.append('photo', config.file)
+      this.$axios({
+        method: 'PATCH',
+        url: '/user/photo',
+        data: fd
+      }).then(res => {
+        this.user.photo = res.data.data.photo
+      }).catch(() => {
+        this.$message.error('上传失败')
+      })
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
+ .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
