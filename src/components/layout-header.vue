@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import eventBus from '@/utils/event-bus'
 export default {
   data () {
     return {
@@ -37,6 +38,11 @@ export default {
   },
   created () {
     this.loadUser()
+
+    //
+    eventBus.$on('update-user', user => {
+      this.user = user
+    })
   },
   methods: {
     onlogout () {

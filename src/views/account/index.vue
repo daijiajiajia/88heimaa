@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import eventBus from '@/utils/event-bus'
 export default {
   data () {
     return {
@@ -69,6 +70,8 @@ export default {
         url: '/user/profile',
         data: this.user
       }).then(res => {
+        // 更新用户信息之后，通知头部组件
+        eventBus.$emit('update-user', this.user)
         this.$message({
           type: 'success',
           message: '修改成功'
@@ -98,6 +101,9 @@ export default {
         data: fd
       }).then(res => {
         this.user.photo = res.data.data.photo
+
+        // 更新用户信息之后，通知头部组件
+        eventBus.$emit('update-user', this.user)
       }).catch(() => {
         this.$message.error('上传失败')
       })
